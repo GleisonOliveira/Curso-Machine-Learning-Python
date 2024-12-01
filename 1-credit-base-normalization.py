@@ -9,6 +9,8 @@ from sklearn.model_selection import train_test_split
 import pickle
 matplotlib.use('WebAgg')
 
+folder = 'files/credit/'
+
 # normalize values to remove inconsistenses
 def normalize_age(base_credit):
     # get the mean age to normalize table
@@ -33,7 +35,7 @@ def escale_x_values(x_credit):
 pd.DataFrame.iteritems = pd.DataFrame.items
 
 show_graphics = False
-base_credit = pd.read_csv('files/credit_data.csv')
+base_credit = pd.read_csv(f'{folder}credit_data.csv')
 base_credit = normalize_age(base_credit)
 
 # get the previsors, the columns 1 to loan and convert then to numpy values
@@ -71,7 +73,7 @@ x_credit = escale_x_values(x_credit)
 x_credit_treinamento, x_credit_test, y_credit_treinamento, y_credit_test = train_test_split(x_credit, y_credit, test_size=0.25, random_state=0)
 
 # here we export the database
-with open('files/credit.pkl', mode='wb') as f:
+with open(f'{folder}credit.pkl', mode='wb') as f:
     pickle.dump([x_credit_treinamento, y_credit_treinamento, x_credit_test, y_credit_test], f)
 
 

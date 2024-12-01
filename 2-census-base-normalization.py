@@ -10,10 +10,12 @@ from sklearn.model_selection import train_test_split
 import pickle
 matplotlib.use('WebAgg')
 
+folder = 'files/census/'
+
 # fix missing iteritems in pandas 2
 pd.DataFrame.iteritems = pd.DataFrame.items
 show_graphics = False
-base_census = pd.read_csv('files/census.csv')
+base_census = pd.read_csv(f'{folder}census.csv')
 
 if show_graphics == True:
     fig1 = plt.figure(figsize=(10, 6))
@@ -54,9 +56,14 @@ y_census = base_census.iloc[:, 14].values
 
 # here we will transform the categorical (words) data into numerical data
 columns = [1,3,5,6,7,8,9,13]
+label_encoders = {}
 
 for i in columns:
-    x_census[:, i] = LabelEncoder().fit_transform(x_census[:, i])
+    le = LabelEncoder()
+    x_census[:, i] = le.fit_transform(x_census[:, i])
+    label_encoders[i] = le
+
+with open(f'{folder}label_encoders/label_encoders.pkl', mode='wb') as f: pickle.dump(label_encoders, f)
 
 # here we configure the column transformer to equalize each categorical column in census to prevent one converted value to be considered as more important ( the passthrough is to maintain the other values unchanged)
 onehotencoder_census = ColumnTransformer(transformers=[('OneHot', OneHotEncoder(), columns)], remainder="passthrough")
@@ -71,5 +78,5 @@ x_census = scaler_sensus.fit_transform(x_census)
 # here we separate the data to test and training
 x_census_treinamento, x_census_test, y_census_treinamento, y_census_test = train_test_split(x_census, y_census, test_size=0.15, random_state=0)
 
-with open('files/census.pkl', mode='wb') as f:
+with open(f'{folder}census.pkl', mode='wb') as f:
     pickle.dump([x_census_treinamento, y_census_treinamento, x_census_test, y_census_test], f)
