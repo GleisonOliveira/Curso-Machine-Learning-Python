@@ -58,6 +58,16 @@ y_census = base_census.iloc[:, 14].values
 columns = [1,3,5,6,7,8,9,13]
 label_encoders = {}
 
+# get the dataframe to ap[ply trim into strings
+base_census_df = pd.DataFrame(x_census)
+
+# iterate each column to apply trim in strings
+for col in columns:
+    base_census_df[col] = base_census_df[col].apply(lambda x: str(x).strip())
+
+# reassign the cleaned values
+x_census = base_census_df.values  
+
 for i in columns:
     le = LabelEncoder()
     x_census[:, i] = le.fit_transform(x_census[:, i])
@@ -66,15 +76,20 @@ for i in columns:
 with open(f'{folder}label_encoders/label_encoders.pkl', mode='wb') as f: pickle.dump(label_encoders, f)
 
 # here we configure the column transformer to equalize each categorical column in census to prevent one converted value to be considered as more important ( the passthrough is to maintain the other values unchanged)
-onehotencoder_census = ColumnTransformer(transformers=[('OneHot', OneHotEncoder(), columns)], remainder="passthrough")
+onehotencoder = OneHotEncoder()
+onehotencoder_census = ColumnTransformer(transformers=[('OneHot', onehotencoder, columns)], remainder="passthrough")
 
 # here we apply the onehotencoder
 x_census = onehotencoder_census.fit_transform(x_census).toarray()
+
+with open(f'{folder}one_hot_encoders/onehotencoder_census.pkl', mode='wb') as f: pickle.dump(onehotencoder_census, f)
 
 # here we apply the scaler to adjust the values
 scaler_sensus = StandardScaler()
 x_census = scaler_sensus.fit_transform(x_census)
 
+with open(f'{folder}scalers/scaler_census.pkl', mode='wb') as f: pickle.dump(scaler_sensus, f)
+    
 # here we separate the data to test and training
 x_census_treinamento, x_census_test, y_census_treinamento, y_census_test = train_test_split(x_census, y_census, test_size=0.15, random_state=0)
 

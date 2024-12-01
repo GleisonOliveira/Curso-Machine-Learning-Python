@@ -18,11 +18,13 @@ naive_credit_data.fit(x_credit_training, y_credit_training)
 
 # make previsions of test data
 previsions = naive_credit_data.predict(x_credit_test)
+prevision_client = naive_credit_data.predict([[70000,80.017015066929204,10000]])
 
 cm = ConfusionMatrix(naive_credit_data)
 cm.fit(x_credit_training, y_credit_training)
 cm.score(x_credit_test, y_credit_test)
 
+print(prevision_client)
 print('Percentual de acertos: ', accuracy_score(y_credit_test, previsions))
 print('Matrix de acertos e erros: ', confusion_matrix(y_credit_test, previsions))
 print('Classificação dos acertos', classification_report(y_credit_test, previsions))
