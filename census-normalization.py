@@ -58,7 +58,7 @@ y_census = base_census.iloc[:, 14].values
 columns = [1,3,5,6,7,8,9,13]
 label_encoders = {}
 
-# get the dataframe to ap[ply trim into strings
+# get the dataframe to apply trim into strings
 base_census_df = pd.DataFrame(x_census)
 
 # iterate each column to apply trim in strings

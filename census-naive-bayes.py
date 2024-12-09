@@ -5,8 +5,6 @@ from yellowbrick.classifier import ConfusionMatrix
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
-from sklearn.preprocessing import LabelEncoder, OneHotEncoder, StandardScaler
-from sklearn.compose import ColumnTransformer
 import pandas as pd
 
 matplotlib.use("WebAgg")
@@ -36,8 +34,6 @@ data_dict = {
 # Criar DataFrame
 df = pd.DataFrame(data_dict)
 
-base = pd.read_csv(f"{folder}census_data.csv")
-
 # client data
 clients_data = df.iloc[:, 0:14].values
 
@@ -56,10 +52,10 @@ with open(f"{folder}one_hot_encoders/onehotencoder_census.pkl", mode="rb") as f:
 # load o StandardScaler
 with open(f"{folder}scalers/scaler_census.pkl", "rb") as f:
     scaler_census = pickle.load(f)
-
-# training naive bayes
-census_data = GaussianNB()
-census_data.fit(x_census_training, y_census_training)
+    
+# load the trained model
+with open(f"{folder}census.trained.pkl", "rb") as f:
+    census_data = pickle.load(f)
 
 # make a prevision of test data
 prevision = census_data.predict(x_census_test)

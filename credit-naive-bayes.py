@@ -12,15 +12,15 @@ folder = 'files/credit/'
 with open(f'{folder}credit.pkl', 'rb') as f:
     x_credit_training, y_credit_training, x_credit_test, y_credit_test = pickle.load(f)
     
-# training the naive bayes
-naive_credit_data = GaussianNB()
-naive_credit_data.fit(x_credit_training, y_credit_training)
+# open the file with trained data
+with open(f'{folder}credit.trained.pkl', 'rb') as f:
+    gaussian_nb = pickle.load(f)
 
 # make previsions of test data
-previsions = naive_credit_data.predict(x_credit_test)
-prevision_client = naive_credit_data.predict([[70000,80.017015066929204,10000]])
+previsions = gaussian_nb.predict(x_credit_test)
+prevision_client = gaussian_nb.predict([[70000,80.017015066929204,10000]])
 
-cm = ConfusionMatrix(naive_credit_data)
+cm = ConfusionMatrix(gaussian_nb)
 cm.fit(x_credit_training, y_credit_training)
 cm.score(x_credit_test, y_credit_test)
 
