@@ -29,6 +29,9 @@ def escale_x_values(x_credit):
     scaler_credit = StandardScaler()
     x_credit = scaler_credit.fit_transform(x_credit)
     
+    with open(f'{folder}scalers/scaler_credit.pkl', mode='wb') as f:
+        pickle.dump(scaler_credit, f)
+        
     return x_credit
 
 # fix missing iteritems in pandas 2
